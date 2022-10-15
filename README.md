@@ -7,7 +7,7 @@
 - Value equality : equatable
 - Functional programming : dartz
 - Remote API : internet_connection_checker, http
-- Local cache : shared_preferences: ^0.5.3+4
+- Local cache : shared_preferences
 - Json annotator : json_annotation
 - API manager : chopper
-- Mock : Mockito
+- Mock : mockito
