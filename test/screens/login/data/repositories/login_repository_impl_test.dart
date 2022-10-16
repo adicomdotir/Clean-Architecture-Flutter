@@ -39,6 +39,8 @@ void main() {
   group("get user token", () {
     test('should check if the device is online', () async {
       //arrange
+      when(mockRemoteDataSource.loginUser(tEmail, tPassword))
+          .thenAnswer((_) async => tLogin);
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       //act
