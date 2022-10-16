@@ -35,4 +35,14 @@ class LoginRepositoryImpl extends LoginRepository {
       return Left(NoConnectionFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Login>> fetchCachedToken() async {
+    try {
+      final localData = await localDataSource.getLastToken();
+      return Right(localData);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
 }
