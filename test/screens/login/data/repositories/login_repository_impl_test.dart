@@ -3,8 +3,8 @@ import 'package:clean_architecture_flutter/core/error/failures.dart';
 import 'package:clean_architecture_flutter/core/network/network_info.dart';
 import 'package:clean_architecture_flutter/screens/login/data/models/login_model.dart';
 import 'package:clean_architecture_flutter/screens/login/data/repositories/login_repository_impl.dart';
-import 'package:clean_architecture_flutter/screens/login/datasources/login_local_datasource.dart';
-import 'package:clean_architecture_flutter/screens/login/datasources/login_remote_datasource.dart';
+import 'package:clean_architecture_flutter/screens/login/data/datasources/login_local_datasource.dart';
+import 'package:clean_architecture_flutter/screens/login/data/datasources/login_remote_datasource.dart';
 import 'package:clean_architecture_flutter/screens/login/domain/entities/login.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -93,17 +93,18 @@ void main() {
 
       //assert
       verify(mockRemoteDataSource.loginUser(tEmail, tPassword));
-      verifyZeroInteractions(mockLocalDataSource);
+      // verifyZeroInteractions(mockLocalDataSource);
       expect(result, equals(Left(ServerFailure())));
     });
   });
-/*
+
   group("device is offline", () {
     setUp(() {
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
     });
 
-    test('should return a NoConnectionFailure if the device is offline', () async {
+    test('should return a NoConnectionFailure if the device is offline',
+        () async {
       //arrange
       when(mockNetworkInfo.isConnected).thenAnswer((_) => Future.value(false));
 
@@ -115,5 +116,4 @@ void main() {
       expect(result, equals(Left(NoConnectionFailure())));
     });
   });
-  */
 }

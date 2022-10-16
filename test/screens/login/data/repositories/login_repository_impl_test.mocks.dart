@@ -8,9 +8,9 @@ import 'package:clean_architecture_flutter/core/network/network_info.dart'
     as _i7;
 import 'package:clean_architecture_flutter/screens/login/data/models/login_model.dart'
     as _i3;
-import 'package:clean_architecture_flutter/screens/login/datasources/login_local_datasource.dart'
+import 'package:clean_architecture_flutter/screens/login/data/datasources/login_local_datasource.dart'
     as _i6;
-import 'package:clean_architecture_flutter/screens/login/datasources/login_remote_datasource.dart'
+import 'package:clean_architecture_flutter/screens/login/data/datasources/login_remote_datasource.dart'
     as _i4;
 import 'package:clean_architecture_flutter/screens/login/domain/entities/login.dart'
     as _i2;

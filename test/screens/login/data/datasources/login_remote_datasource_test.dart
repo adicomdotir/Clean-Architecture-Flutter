@@ -4,7 +4,7 @@ import 'package:chopper/chopper.dart';
 import 'package:clean_architecture_flutter/core/error/exceptions.dart';
 import 'package:clean_architecture_flutter/core/network/rest_client_service.dart';
 import 'package:clean_architecture_flutter/screens/login/data/models/login_model.dart';
-import 'package:clean_architecture_flutter/screens/login/datasources/login_remote_datasource.dart';
+import 'package:clean_architecture_flutter/screens/login/data/datasources/login_remote_datasource.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

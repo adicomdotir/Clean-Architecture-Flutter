@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:clean_architecture_flutter/core/error/exceptions.dart';
 import 'package:clean_architecture_flutter/core/utils/constants.dart';
 import 'package:clean_architecture_flutter/screens/login/data/models/login_model.dart';
-import 'package:clean_architecture_flutter/screens/login/datasources/login_local_datasource.dart';
+import 'package:clean_architecture_flutter/screens/login/data/datasources/login_local_datasource.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
