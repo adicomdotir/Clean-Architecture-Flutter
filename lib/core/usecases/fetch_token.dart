@@ -1,15 +1,16 @@
 import 'package:clean_architecture_flutter/core/error/failures.dart';
 import 'package:clean_architecture_flutter/core/usecases/usecase.dart';
+import 'package:clean_architecture_flutter/screens/login/domain/entities/login.dart';
 import 'package:clean_architecture_flutter/screens/login/domain/repositories/login_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class FetchToken extends UseCase {
+class FetchToken extends UseCase<Login, TokenParams> {
   final LoginRepository repository;
 
   FetchToken({required this.repository});
 
   @override
-  Future<Either<Failure, dynamic>> call(params) {
+  Future<Either<Failure, Login>> call(TokenParams params) {
     return repository.fetchCachedToken();
   }
 }

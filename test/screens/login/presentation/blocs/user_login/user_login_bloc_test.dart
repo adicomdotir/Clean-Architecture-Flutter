@@ -1,105 +1,134 @@
-// import 'package:clean_architecture_flutter/screens/login/domain/usecases/login_user.dart';
-// import 'package:dartz/dartz.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:mockito/annotations.dart';
-// import 'package:mockito/mockito.dart';
+import 'package:clean_architecture_flutter/core/error/failures.dart';
+import 'package:clean_architecture_flutter/core/usecases/fetch_token.dart';
+import 'package:clean_architecture_flutter/core/utils/constants.dart';
+import 'package:clean_architecture_flutter/screens/login/domain/entities/login.dart';
+import 'package:clean_architecture_flutter/screens/login/domain/usecases/login_user.dart';
+import 'package:clean_architecture_flutter/screens/login/presentation/blocs/user_login/user_login_bloc.dart';
+import 'package:clean_architecture_flutter/screens/login/presentation/blocs/user_login/user_login_event.dart';
+import 'package:clean_architecture_flutter/screens/login/presentation/blocs/user_login/user_login_state.dart';
+import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
-// @GenerateMocks([LoginUser, FetchToken])
-// void main() {
-//   UserLoginBloc userLoginBloc;
-//   MockLoginUser mockLoginUser;
-//   MockFetchToken mockFetchToken;
+import 'user_login_bloc_test.mocks.dart';
 
-//   setUp(() {
-//     mockLoginUser = MockLoginUser();
-//     mockFetchToken = MockFetchToken();
-//     userLoginBloc = UserLoginBloc(
-//       loginUser: mockLoginUser,
-//       fetchToken: mockFetchToken,
-//     );
-//   });
+@GenerateMocks([LoginUser, FetchToken])
+void main() {
+  late UserLoginBloc userLoginBloc;
+  late MockLoginUser mockLoginUser;
+  late MockFetchToken mockFetchToken;
 
-//   tearDown(() {
-//     userLoginBloc?.close();
-//   });
+  setUp(() {
+    mockLoginUser = MockLoginUser();
+    mockFetchToken = MockFetchToken();
+    userLoginBloc = UserLoginBloc(
+      loginUser: mockLoginUser,
+      fetchToken: mockFetchToken,
+    );
+  });
 
-//   final String tEmail = 'test@test.com';
-//   final String tPassword = 'test';
+  tearDown(() {
+    userLoginBloc.close();
+  });
 
-//   test('should initial state equals to NotLoggedIn', () async {
-//     //assert
-//     expect(userLoginBloc.initialState, equals(NotLoggedState()));
-//   });
+  final String tEmail = 'test@test.com';
+  final String tPassword = 'test';
 
-//   group(
-//     'loginUser',
-//     () {
-//       test('should return an error if login is not successfull', () async {
-//         //arrange
-//         when(mockLoginUser(any)).thenAnswer((_) async => Left(ServerFailure()));
+  test('should initial state equals to NotLoggedIn', () async {
+    //assert
+    expect(userLoginBloc.initialState, equals(NotLoggedState()));
+  });
 
-//         //act
-//         userLoginBloc.add(LoginEvent(tEmail, tPassword));
+  group(
+    'loginUser',
+    () {
+      test('should return an error if login is not successfull', () async {
+        //arrange
+        when(mockLoginUser(any)).thenAnswer((_) async => Left(ServerFailure()));
 
-//         //assert
-//         expectLater(
-//           userLoginBloc,
-//           emitsInOrder(
-//             [
-//               NotLoggedState(),
-//               LoadingState(),
-//               ErrorState(message: LOGGING_ERROR)
-//             ],
-//           ),
-//         );
-//       });
+        //act
+        userLoginBloc.add(LoginEvent(tEmail, tPassword));
 
-//       test(
-//         'should return LoggedState if login is successfull',
-//         () async {
-//           //arrange
-//           when(mockLoginUser(any))
-//               .thenAnswer((_) async => Right(Login(token: "1234")));
+        //assert
+        expectLater(
+          userLoginBloc.stream,
+          emitsInOrder(
+            [
+              NotLoggedState(),
+              LoadingState(),
+              ErrorState(message: loggingErrorConst)
+            ],
+          ),
+        );
+      });
 
-//           //act
-//           userLoginBloc.add(LoginEvent(tEmail, tPassword));
+      test(
+        'should return LoggedState if login is successfull',
+        () async {
+          //arrange
+          when(mockLoginUser(any))
+              .thenAnswer((_) async => Right(Login(token: "1234")));
 
-//           //assert
-//           expect(
-//             userLoginBloc,
-//             emitsInOrder(
-//               [
-//                 NotLoggedState(),
-//                 LoadingState(),
-//                 LoggedState(login: Login(token: "1234"))
-//               ],
-//             ),
-//           );
-//         },
-//       );
-//     },
-//   );
+          //act
+          userLoginBloc.add(LoginEvent(tEmail, tPassword));
 
-//   group('fetchToken', () {
-//     test('should return the token if exists', () async {
-//       //arrange
-//       when(mockFetchToken(any))
-//           .thenAnswer((_) async => Right(Login(token: "1234")));
+          //assert
+          expect(
+            userLoginBloc.stream,
+            emitsInOrder(
+              [
+                NotLoggedState(),
+                LoadingState(),
+                LoggedState(login: Login(token: "1234"))
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
 
-//       //act
-//       userLoginBloc.add(CheckLoginStatusEvent());
+  group('fetchToken', () {
+    test('should return an error if token is not exists', () async {
+      //arrange
+      when(mockFetchToken(any)).thenAnswer((_) async => Left(CacheFailure()));
 
-//       //assert
-//       expect(
-//         userLoginBloc,
-//         emitsInOrder(
-//           [
-//             NotLoggedState(),
-//             LoadingState(),
-//             LoggedState(login: Login(token: "1234")),
-//           ],
-//         ),
-//       );
-//     });
-//   });
-// }
+      //act
+      userLoginBloc.add(CheckLoginStatusEvent());
+
+      //assert
+      expectLater(
+        userLoginBloc.stream,
+        emitsInOrder(
+          [
+            NotLoggedState(),
+            LoadingState(),
+            NotLoggedState(),
+          ],
+        ),
+      );
+    });
+
+    test('should return the token if exists', () async {
+      //arrange
+      when(mockFetchToken(any))
+          .thenAnswer((_) async => Right(Login(token: "1234")));
+
+      //act
+      userLoginBloc.add(CheckLoginStatusEvent());
+
+      //assert
+      expect(
+        userLoginBloc.stream,
+        emitsInOrder(
+          [
+            NotLoggedState(),
+            LoadingState(),
+            LoggedState(login: Login(token: "1234")),
+          ],
+        ),
+      );
+    });
+  });
+}
