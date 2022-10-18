@@ -7,7 +7,7 @@ import 'package:clean_architecture_flutter/screens/home/data/datasources/home_re
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'home_remote_datasource.mocks.dart';
+import 'home_remote_datasource_test.mocks.dart';
 import 'package:http/http.dart' as http;
 
 @GenerateMocks([RestClientService])
