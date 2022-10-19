@@ -13,3 +13,5 @@ class LoginEvent extends UserLoginEvent {
 }
 
 class CheckLoginStatusEvent extends UserLoginEvent {}
+
+class SkipLoginEvent extends UserLoginEvent {}
